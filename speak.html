@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Communica</title>
+    <!--Google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet" type="text/css">
+  </head>
+  <body class="h-100vh dark-background d-flex align-items-center justify-content-center">
+    <div class="d-flex align-items-center justify-content-center flex-column">
+        <h4 class="text-center mb-5 glow-text">Live Sensor Values</h4>
+        <input type="text" name="gesture_name" id="gesture_name" class="text-box" placeholder="Gesture">
+        <canvas id="myCanvas" width="350" height="350"></canvas>
+
+        <h4 id="display_gesture" class="glow-text pb-4">gg</h4>
+        <!--<a href="#" class="btn btn-glow" id="save_btn">
+            Save Gesture
+        </a>-->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+            let sensor_values = [100,100,100,100,100];
+            let minIndex=-1;
+            var fontSize=18;
+            let db;
+            const dbName = 'Communica_DB';
+            const dbVersion = 1;
+            const storeName = 'Communica_tbl';
+            const keys = ["one_less", "two_less", "three_less", "four_less", "five_less"];
+            let display_gesture=document.querySelector("#display_gesture");
+            let previous_value="";
+            //let save_btn=document.querySelector("#save_btn").addEventListener('click',speakGesture);
+
+            function show_gesture(keyToRead){
+              readFromDatabase(keyToRead)
+                                .then(data => {
+                                    if (data) {
+                                    console.log('Retrieved value:', data.value);
+                                    display_gesture.textContent=data.value;
+                                    show_gesture(data.value);
+                                    if (previous_value != data.value){
+                                      speak(data.value);
+                                      previous_value=data.value;
+                                    }
+                                      
+                                    } else {
+                                    console.log('Key not found');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                });
+            }
+            function speakGesture(){
+              readFromDatabase("two_less")
+                                .then(data => {
+                                    if (data) {
+                                    console.log('Retrieved value:', data.value);
+                                    speak(data.value);
+                                    console.log("Nimesh Kumar...");
+                                    } else {
+                                    console.log('Key not found');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                });
+            }
+
+            function getSensorMin(sensor_values)
+            {
+                let a = Math.min.apply(Math, sensor_values)
+                console.log("Nimesh :::");
+                //this works
+                console.log(a); 
+                // Find the index of the minimum value
+                minIndex = sensor_values.indexOf(a);
+                console.log("----------");
+                console.log(keys[minIndex]);
+                show_gesture(keys[minIndex]);
+                console.log('Speaking ....');
+                //speak();
+                setTimeout(() => {
+                  console.log('Delayed message');
+                }, 2000); // Delays for 2000 milliseconds (2 seconds)
+                console.log('Speakking end...');
+
+            }
+            // Get the canvas element
+            var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+
+            // Create an image object
+            var img = new Image();
+
+            // Set the image source
+            img.src = "images/hand_02_t.png"; // Replace "image.jpg" with the path to your image
+
+            function draw_all()
+            {
+                ctx.drawImage(img, 20, 0, 300, 300);
+                // Set font properties for the text
+                ctx.font = "24px Arial";
+                ctx.fillStyle = "white"; // Text color
+
+                /******************pinky finger**********************/
+                // Set the text you want to display and its position 
+                var x1 = 45;
+                var y1 = 85;
+
+                // Draw a Thumb circle below the text
+                
+                ctx.beginPath();
+                var centerX = x1+6; // Adjust the x-coordinate to position the circle
+                var centerY = y1-8; // Adjust the y-coordinate to position the circle
+                var radius = 25;
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = "red";
+                ctx.fill();
+                ctx.closePath();
+                // Draw the Thumb on the canvas above the image
+                // Set font properties for the text
+                ctx.font = fontSize + "px Arial";
+                ctx.fillStyle = "white";
+                ctx.fillText(sensor_values[0], x1-14, y1);
+
+                /******************ring finger**********************/
+                // Set the text you want to display and its position of index finger
+                var x2 = 88;
+                var y2 = 38;
+                // Draw a Index circle below the text
+                ctx.beginPath();
+                var centerX = x2+6; // Adjust the x-coordinate to position the circle
+                var centerY = y2-8; // Adjust the y-coordinate to position the circle
+                var radius = 25;
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = "red";
+                ctx.fill();
+                ctx.closePath();
+
+                // Draw the Index on the canvas above the image
+                ctx.fillStyle = "white";
+                ctx.fillText(sensor_values[1], x2-14, y2);
+
+                /******************middle finger**********************/
+                // Set the text you want to display and its position of index finger
+                var x3 = 155;
+                var y3 = 32;
+                // Draw a Index circle below the text
+                ctx.beginPath();
+                var centerX = x3+6; // Adjust the x-coordinate to position the circle
+                var centerY = y3-8; // Adjust the y-coordinate to position the circle
+                var radius = 25;
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = "red";
+                ctx.fill();
+                ctx.closePath();
+
+                // Draw the Index on the canvas above the image
+                ctx.fillStyle = "white";
+                ctx.fillText(sensor_values[2], x3-14, y3);
+
+                /******************index finger**********************/
+                // Set the text you want to display and its position of index finger
+                var x4 = 218;
+                var y4 = 35;
+                // Draw a Index circle below the text
+                ctx.beginPath();
+                var centerX = x4+6; // Adjust the x-coordinate to position the circle
+                var centerY = y4-8; // Adjust the y-coordinate to position the circle
+                var radius = 25;
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = "red";
+                ctx.fill();
+                ctx.closePath();
+
+                // Draw the Index on the canvas above the image
+                ctx.fillStyle = "white";
+                ctx.fillText(sensor_values[3], x4-14, y4);
+
+                /******************thumb finger**********************/
+                // Set the text you want to display and its position of index finger
+                var x5 = 275;
+                var y5 = 133;
+                // Draw a Index circle below the text
+                ctx.beginPath();
+                var centerX = x5+6; // Adjust the x-coordinate to position the circle
+                var centerY = y5-8; // Adjust the y-coordinate to position the circle
+                var radius = 25;
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = "red";
+                ctx.fill();
+                ctx.closePath();
+
+                // Draw the Index on the canvas above the image
+                ctx.fillStyle = "white";
+                ctx.fillText(sensor_values[4], x5-14, y5);
+            }
+            // Once the image has loaded, draw it on the canvas
+            img.onload = draw_all();
+            async function fetchData() {
+                try {
+                    const response = await fetch('http://192.168.4.1/');
+                    
+                    if (!response.ok) {
+                    throw new Error('API request failed');
+                    }
+                    const data = await response.json();
+                    //changeMoistureLevel(data["feeds"][0]["field1"]);
+                    console.log('API response:', data["sensor1"]);
+                    sensor_values[0]=parseFloat(data["sensor5"]);
+                    sensor_values[1]=parseFloat(data["sensor4"]);
+                    sensor_values[2]=parseFloat(data["sensor3"]);
+                    sensor_values[3]=parseFloat(data["sensor2"]);
+                    sensor_values[4]=parseFloat(data["sensor1"]);
+                    getSensorMin(sensor_values);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    draw_all();
+                } catch (error) {
+                    console.error('Error fetching data:', error.message);
+                }
+            }
+            /*async function fetchData() {
+                try {
+                    thumb=thumb+1;
+                    console.log(thumb);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    draw_all();
+                } catch (error) {
+                    console.error('Error fetching data:', error.message);
+                }
+            }*/
+
+    
+            async function callApiEvery3Seconds() {
+                            while (true) {
+                                await fetchData();
+                                await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 3 seconds
+                            }
+                            }
+                            callApiEvery3Seconds()
+                            
+
+                            function create_database()
+                            {
+                                // Open or create the database
+                                let request = window.indexedDB.open(dbName, dbVersion);
+
+                                // Event when the database version changes (or when created for the first time)
+                                request.onupgradeneeded = function(event) {
+                                    db = event.target.result;
+
+                                    // Create an object store (similar to a table in SQL databases)
+                                    let objectStore = db.createObjectStore(storeName, { keyPath: 'key' });
+
+                                    // Add keys with value 0 to the object store
+                                    keys.forEach(key => {
+                                        objectStore.add({ key: key, value: 1 });
+                                    });
+                                };
+
+                                // Event when the database is successfully opened
+                                request.onsuccess = function(event) {
+                                db = event.target.result;
+                                    console.log('Database opened successfully!');
+                                };
+
+                                // Event when an error occurs while opening the database
+                                request.onerror = function(event) {
+                                    console.error('Database error: ' + event.target.errorCode);
+                                };
+
+                                // Event when attempting to open a database with a higher version than the existing one
+                                request.onblocked = function(event) {
+                                console.error('Database upgrade needed, but the connection is blocked');
+                                };
+
+                            }
+                            create_database();
+
+                            //read from database
+                            function readFromDatabase(keyToRead) {
+                                return new Promise((resolve, reject) => {
+                                    let request = window.indexedDB.open(dbName, dbVersion);
+
+                                    request.onsuccess = function(event) {
+                                    let db = event.target.result;
+
+                                    let transaction = db.transaction([storeName], 'readonly');
+                                    let objectStore = transaction.objectStore(storeName);
+
+                                    let getRequest = objectStore.get(keyToRead);
+
+                                    getRequest.onsuccess = function(event) {
+                                        let data = event.target.result;
+                                        resolve(data); // Resolve with the retrieved data
+                                    };
+
+                                    getRequest.onerror = function(event) {
+                                        reject('Error reading value: ' + event.target.errorCode);
+                                    };
+                                    };
+
+                                    request.onerror = function(event) {
+                                    reject('Database error: ' + event.target.errorCode);
+                                    };
+                                });
+                                }
+
+                                // Example usage:
+                                const keyToRead = 'one_less';
+
+                                readFromDatabase(keyToRead)
+                                .then(data => {
+                                    if (data) {
+                                    console.log('Retrieved value:', data.value);
+                                    //speak(data.value);
+                                    } else {
+                                    console.log('Key not found');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                });
+
+                                function speak(texttospeak) {
+                                  const text = texttospeak;
+                                  
+                                  // Create an instance of SpeechSynthesisUtterance
+                                  const speech = new SpeechSynthesisUtterance();
+                                  
+                                  // Set the text to be spoken
+                                  speech.text = text;
+                                  
+                                  // Get the speech synthesis voices available on the user's device
+                                  const voices = window.speechSynthesis.getVoices();
+                                  
+                                  // Set the voice (optional)
+                                  speech.voice = voices[0]; // You can change the index to select a different voice
+                                  
+                                  // Use the speech synthesis API to speak the text
+                                  window.speechSynthesis.speak(speech);
+                                }
+
+                                window.addEventListener('load', show_gesture);
+    </script>
+    <!--<script>
+      async function fetchData() {
+      try {
+        const response = await fetch('http://192.168.4.1/');
+        
+        if (!response.ok) {
+          throw new Error('API request failed');
+        }
+        const data = await response.json();
+        //changeMoistureLevel(data["feeds"][0]["field1"]);
+        console.log('API response:', data);
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+      }
+    }
+    
+    async function callApiEvery3Seconds() {
+      while (true) {
+        await fetchData();
+        await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 3 seconds
+      }
+    }
+    callApiEvery3Seconds()
+  </script>-->
+
+  <!--this will go to communica save page
+  <script>
+      function sendGetRequest() {
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            console.log(xhr.responseText); // Do something with the response
+          } else {
+            console.log('Request failed with status:', xhr.status);
+          }
+        }
+      };
+
+      xhr.open('GET', 'http://192.168.4.1/', true);
+      xhr.send();
+    }
+    // Call the function every 3 seconds
+    setInterval(sendGetRequest, 3000);
+   
+
+  </script>
+   -->
+   <script>
+    
+   </script>
+  </body>
+</html>
+
+  

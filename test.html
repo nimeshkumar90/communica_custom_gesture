@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text-to-Speech</title>
+</head>
+<body>
+
+  <input type="text" id="text-to-speak" placeholder="Enter text to speak">
+  <button onclick="speak()">Speak</button>
+
+  <script>
+    function speak() {
+      const text = document.getElementById('text-to-speak').value;
+      
+      // Create an instance of SpeechSynthesisUtterance
+      const speech = new SpeechSynthesisUtterance();
+      
+      // Set the text to be spoken
+      speech.text = text;
+      
+      // Get the speech synthesis voices available on the user's device
+      const voices = window.speechSynthesis.getVoices();
+      
+      // Set the voice (optional)
+      speech.voice = voices[0]; // You can change the index to select a different voice
+      
+      // Use the speech synthesis API to speak the text
+      window.speechSynthesis.speak(speech);
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Communica</title>
+    <!--Google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="style.css" rel="stylesheet" type="text/css">
+  </head>
+  <body class="h-100vh dark-background d-flex align-items-center justify-content-center">
+    <div class="scan">
+      <div class="hand">
+        <div class="lines"></div>
+      </div>
+      <h2 class="font-roboto-mono" id="communica_btn"> Communica </h2>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!--<script>
+      async function fetchData() {
+      try {
+        const response = await fetch('http://192.168.4.1/');
+        
+        if (!response.ok) {
+          throw new Error('API request failed');
+        }
+        const data = await response.json();
+        //changeMoistureLevel(data["feeds"][0]["field1"]);
+        console.log('API response:', data);
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+      }
+    }
+    
+    async function callApiEvery3Seconds() {
+      while (true) {
+        await fetchData();
+        await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 3 seconds
+      }
+    }
+    callApiEvery3Seconds()
+  </script>-->
+
+  <!--this will go to communica save page
+  <script>
+      function sendGetRequest() {
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            console.log(xhr.responseText); // Do something with the response
+          } else {
+            console.log('Request failed with status:', xhr.status);
+          }
+        }
+      };
+
+      xhr.open('GET', 'http://192.168.4.1/', true);
+      xhr.send();
+    }
+    // Call the function every 3 seconds
+    setInterval(sendGetRequest, 3000);
+   
+
+  </script>
+   -->
+   <script>
+    let communica_btn=document.querySelector("#communica_btn");
+    function go_to_sensor_page(){
+      window.location.href = "save_gesture.html";
+    }
+    communica_btn.addEventListener('click', go_to_sensor_page);
+   </script>
+  </body>
+</html>
+
+  
